@@ -1,0 +1,39 @@
+name: dart_llama_lib
+description: "Llama.cpp biding for Dart"
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ffi: ^2.1.2
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  ffigen: ^10.0.0
+
+analyzer:
+  exclude:
+    - 'lib/bind/llama_cpp.dart'
+
+# The following section is specific to Flutter packages.
+flutter:
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true
+        package: com.example.dart_llama_lib
+        pluginClass: DartLlamaLib
+      linux:
+        ffiPlugin: true
+        pluginClass: DartLlamaLib
+      windows:
+        ffiPlugin: true
+        pluginClass: DartLlamaLib

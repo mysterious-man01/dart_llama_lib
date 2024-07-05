@@ -1,0 +1,10 @@
+# Run 'dart run ffigen --config ffigen.yaml'
+
+name: 'llama_cpp'
+description: 'Bindings to llama.cpp'
+output: 'lib/bind/llama_cpp.dart'
+llvm-path:
+  - 'C:\Program Files\LLVM'
+headers:
+  entry-points:
+    - 'src/llama.cpp/include/llama.h'

@@ -204,6 +204,14 @@ class Llama{
     return output.join('');
   }
 
+  /// Reset the state of the Llama instance
+  void clear(){
+    lastTokens.clear();
+    lib.llama_kv_cache_clear(context);
+    batch.n_tokens = 0;
+    tokenPos = 0;
+  }
+
   /// Internal method:
   /// Set context parameters to llama instance
   llama_context_params setContextParams(

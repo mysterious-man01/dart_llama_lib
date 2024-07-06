@@ -3,6 +3,8 @@
 *.log
 *.pyc
 *.swp
+*.dll
+*.so
 .DS_Store
 .atom/
 .buildlog/
@@ -28,4 +30,3 @@ migrate_working_dir/
 .dart_tool/
 build/
 test/
-lib/bin/

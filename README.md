@@ -6,7 +6,7 @@ A library that pack [Llama.cpp](https://github.com/ggerganov/llama.cpp) to work 
 
 Run any .gguf model file on Linux, Windows and Android.
 
-> [!IMPORTANT]
+> [IMPORTANT]
 - This project is on alfa preview and can have unespected bugs!
 - It is not fully implemented!
 
@@ -32,3 +32,7 @@ cmake --build .
 - Ggerganov's [Llama.cpp](https://github.com/ggerganov/llama.cpp) project.
 - Netdur's [llama_cpp_dart](https://github.com/netdur/llama_cpp_dart) project.
 - Dane Madsen's [maid_llm](https://github.com/Mobile-Artificial-Intelligence/maid_llm) project.
+
+## Licence
+
+This project is licensed under the MIT License - see the `LICENSE.md` file for details.

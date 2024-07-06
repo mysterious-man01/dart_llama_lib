@@ -29,20 +29,20 @@ class Llama{
   /// Cursor position in the token list. Default is 0.
   int tokenPos = 0;
   List<int> lastTokens = [];
-
-  /// set llama.cpp library path
-  static String? libPath = Platform.isWindows ? 'lib/bin/llama.dll' : null;
   
   /// Getter for the Llama library.
   /// Loads the library based on the current platform
   static llama_cpp get lib{
-    if(_lib == null){
-      if(libPath != null){
-        _lib = llama_cpp(DynamicLibrary.open(libPath!));
-      } else{
+    if(Platform.isLinux || Platform.isAndroid){
+      _lib = llama_cpp(DynamicLibrary.open('lib/bin/llama.so')); 
+    }
+    else if(Platform.isWindows){
+      _lib = llama_cpp(DynamicLibrary.open('lib/bin/llama.dll'));
+      }
+      else{
         _lib = llama_cpp(DynamicLibrary.process());
       }
-    }
+
     return _lib!;
   }
 
@@ -147,7 +147,7 @@ class Llama{
     lib.llama_backend_free();
   }
 
-  /// Generates a *stream* text based on a given prompt.
+  /// Generates text based on a given prompt.
   /// It continues generating text until an end-of-sequence condition is met.
   String prompt(String text,
   [bool penalizeNl = true,

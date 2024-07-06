@@ -1,4 +1,7 @@
 # Dart Llama Lib
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 A library that pack [Llama.cpp](https://github.com/ggerganov/llama.cpp) to work on Dart.
 
 Run any .gguf model file on Linux, Windows and Android.

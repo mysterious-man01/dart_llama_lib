@@ -1,3 +1,4 @@
+//import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
@@ -29,6 +30,10 @@ class Llama{
   /// Cursor position in the token list. Default is 0.
   int tokenPos = 0;
   List<int> lastTokens = [];
+
+  //final StreamController<String> _controller = StreamController.broadcast();
+
+  //Stream<String> get stream => _controller.stream;
   
   /// Getter for the Llama library.
   /// Loads the library based on the current platform
@@ -48,38 +53,36 @@ class Llama{
 
   /// Llama constructor:
   /// Initialize a instance with the Llama model and parameters.
-  Llama(
-    String modelPath,
-    [
-      int mainGpu = 0,
-      int gpuLayer = 99,
-      bool mLock = false,
-      bool mMap = true,
-      bool vOnly = false,
+  Llama({
+    required String modelPath,
+    int mainGpu = 0,
+    int gpuLayer = 99,
+    bool mLock = false,
+    bool mMap = true,
+    bool vOnly = false,
 
-      int seed = -1,
-      int nCtx = 512,
-      int nBatch = 512,
-      int nThreads = 4,
-      double ropeFreqBase = 0.0,
-      double ropeFreqScale = 0.0,
-      double yarnExtFactor = -1.0,
-      double yarnAttnFactor = 1.0,
-      double yarnBetaFast = 32.0,
-      double yarnBetaSlow = 1.0,
-      int yarnOrigCtx = 0,
-      bool logitsAll = false,
-      bool embedding = false,
-      bool offloadKqv = true,
+    int seed = -1,
+    int nCtx = 512,
+    int nBatch = 512,
+    int nThreads = 4,
+    double ropeFreqBase = 0.0,
+    double ropeFreqScale = 0.0,
+    double yarnExtFactor = -1.0,
+    double yarnAttnFactor = 1.0,
+    double yarnBetaFast = 32.0,
+    double yarnBetaSlow = 1.0,
+    int yarnOrigCtx = 0,
+    bool logitsAll = false,
+    bool embedding = false,
+    bool offloadKqv = true,
 
-      String grammar = '', // toNativeUtf8()
-      String cfgNegativePrompt = '', // toNativeUtf8()
-      double cfgScale = 1.0,
+    String grammar = '', // toNativeUtf8()
+    String cfgNegativePrompt = '', // toNativeUtf8()
+    double cfgScale = 1.0,
 
-      this.loraBase = '',
-      this.loraAdapters = const []
-    ]
-  ){
+    this.loraBase = '',
+    this.loraAdapters = const []
+  }){
     lib.llama_backend_init();
     llama_model_params modelParams = setModelParams(mainGpu, gpuLayer, mLock, mMap, vOnly);
     Pointer<Char> char = modelPath.toNativeUtf8().cast<Char>();
@@ -147,10 +150,11 @@ class Llama{
     lib.llama_backend_free();
   }
 
-  /// Generates text based on a given prompt.
+  /// Generates a stream of text based on a given prompt.
   /// It continues generating text until an end-of-sequence condition is met.
-  String prompt(String text,
-  [bool penalizeNl = true,
+  String prompt({
+    required String text,
+    bool penalizeNl = true,
     int nPrev = 64,
     int nProbs = 0,
     int topK = 40,
@@ -166,7 +170,7 @@ class Llama{
     int mirostat = 0,
     double mirostatTau = 5.0,
     double mirostatEta = 0.1
-  ]) //async*{
+  }) //async*{
   {
     List<String> output = [];
     lastTokens = tokenize(text, true);
@@ -195,6 +199,7 @@ class Llama{
     while(true){
       var (result, isDone) = getGenerated(nPrev, penaltyLastN, penaltyRepeat, penaltyFreq, penaltyPresent, topP, topK, temp);
       output.add(result);
+      //_controller.add(result);
 
       if(isDone){
         break;

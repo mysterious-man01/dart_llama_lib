@@ -17,21 +17,21 @@ endif()
 set(LLAMA_NATIVE OFF CACHE BOOL "llama: disable -march=native flag" FORCE)
 
 set(LLAMA_SOURCES
-  ${LLAMA_DIR}/ggml.c
-  ${LLAMA_DIR}/ggml.h
-  ${LLAMA_DIR}/ggml-alloc.c
-  ${LLAMA_DIR}/ggml-alloc.h
-  ${LLAMA_DIR}/ggml-backend.c
-  ${LLAMA_DIR}/ggml-backend.h
-  ${LLAMA_DIR}/ggml-quants.c
-  ${LLAMA_DIR}/ggml-quants.h
-  ${LLAMA_DIR}/llama.cpp
-  ${LLAMA_DIR}/llama.h
-  ${LLAMA_DIR}/sgemm.cpp
-  ${LLAMA_DIR}/sgemm.h
-  ${LLAMA_DIR}/unicode.h
-  ${LLAMA_DIR}/unicode.cpp
-  ${LLAMA_DIR}/unicode-data.cpp
+  ${LLAMA_DIR}/ggml/src/ggml.c
+  ${LLAMA_DIR}/ggml/include/ggml.h
+  ${LLAMA_DIR}/ggml/src/ggml-alloc.c
+  ${LLAMA_DIR}/ggml/include/ggml-alloc.h
+  ${LLAMA_DIR}/ggml/src/ggml-backend.c
+  ${LLAMA_DIR}/ggml/include/ggml-backend.h
+  ${LLAMA_DIR}/ggml/src/ggml-quants.c
+  ${LLAMA_DIR}/ggml/include/ggml-quants.h
+  ${LLAMA_DIR}/src/llama.cpp
+  ${LLAMA_DIR}/include/llama.h
+  ${LLAMA_DIR}/ggml/src/sgemm.cpp
+  ${LLAMA_DIR}/ggml/src/sgemm.h
+  ${LLAMA_DIR}/src/unicode.h
+  ${LLAMA_DIR}/src/unicode.cpp
+  ${LLAMA_DIR}/src/unicode-data.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${LLAMA_DIR})

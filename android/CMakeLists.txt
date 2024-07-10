@@ -24,7 +24,7 @@ set(LLAMA_SOURCES
   ${LLAMA_DIR}/ggml/src/ggml-backend.c
   ${LLAMA_DIR}/ggml/include/ggml-backend.h
   ${LLAMA_DIR}/ggml/src/ggml-quants.c
-  ${LLAMA_DIR}/ggml/include/ggml-quants.h
+  ${LLAMA_DIR}/ggml/src/ggml-quants.h
   ${LLAMA_DIR}/src/llama.cpp
   ${LLAMA_DIR}/include/llama.h
   ${LLAMA_DIR}/ggml/src/sgemm.cpp
@@ -34,9 +34,9 @@ set(LLAMA_SOURCES
   ${LLAMA_DIR}/src/unicode-data.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${LLAMA_DIR})
-
 add_library(${PROJECT_NAME} SHARED ${LLAMA_SOURCES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${LLAMA_DIR})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib/bin

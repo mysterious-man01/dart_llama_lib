@@ -35,18 +35,17 @@ class Llama{
 
   //Stream<String> get stream => _controller.stream;
   
+  static String? modelPath;
+
   /// Getter for the Llama library.
   /// Loads the library based on the current platform
-  static llama_cpp get lib{
-    if(Platform.isLinux || Platform.isAndroid){
-      _lib = llama_cpp(DynamicLibrary.open('lib/bin/llama.so')); 
+  llama_cpp get lib{
+    if(modelPath != null){
+      _lib = llama_cpp(DynamicLibrary.open(modelPath!));
     }
-    else if(Platform.isWindows){
-      _lib = llama_cpp(DynamicLibrary.open('lib/bin/llama.dll'));
-      }
-      else{
+    else{
         _lib = llama_cpp(DynamicLibrary.process());
-      }
+    }
 
     return _lib!;
   }

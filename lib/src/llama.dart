@@ -1,4 +1,4 @@
-//import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:math';
@@ -30,17 +30,18 @@ class Llama{
   int tokenPos = 0;
   List<int> lastTokens = [];
 
-  //final StreamController<String> _controller = StreamController.broadcast();
+  final StreamController<String> _controller = StreamController.broadcast();
 
-  //Stream<String> get stream => _controller.stream;
+  Stream<String> get stream => _controller.stream;
   
-  static String? modelPath;
+  static String? libPath;
 
   /// Getter for the Llama library.
   /// Loads the library based on the current platform
   llama_cpp get lib{
-    if(modelPath != null){
-      _lib = llama_cpp(DynamicLibrary.open(modelPath!));
+    if(libPath != null){
+      //print('Pathlib: $libPath');
+      _lib = llama_cpp(DynamicLibrary.open(libPath!));
     }
     else{
         _lib = llama_cpp(DynamicLibrary.process());
@@ -205,6 +206,59 @@ class Llama{
     }
 
     return output.join('');
+  }
+
+  Stream<void> prompt_async({
+    required String text,
+    bool penalizeNl = true,
+    int nPrev = 64,
+    int nProbs = 0,
+    int topK = 40,
+    double topP = 0.95,
+    double minP = 0.05,
+    double tfsZ = 1.0,
+    double typicalP = 1.0,
+    double temp = 0.8,
+    int penaltyLastN = 64,
+    double penaltyRepeat = 1.1,
+    double penaltyFreq = 0.0,
+    double penaltyPresent = 0.0,
+    int mirostat = 0,
+    double mirostatTau = 5.0,
+    double mirostatEta = 0.1
+  })
+  async*{
+    lastTokens = tokenize(text, true);
+    if(length != -1){
+      int nCtx = lib.llama_n_ctx(context);
+      int nKv = lastTokens.length + (length - lastTokens.length);
+
+      if(nKv > nCtx){
+        throw Exception('Error: Not enough KV cache');
+      }
+    }
+
+    batch.n_tokens = 0;
+
+    for(int i=0; i < lastTokens.length; i++){
+      addBatch(batch, lastTokens[i], i, [0], false);
+    }
+
+    batch.logits[batch.n_tokens - 1] = 1;
+
+    if(lib.llama_decode(context, batch) != 0){
+      throw Exception('Error: llama_decode() failed');
+    }
+
+    tokenPos = batch.n_tokens;
+    while(true){
+      var (result, isDone) = getGenerated(nPrev, penaltyLastN, penaltyRepeat, penaltyFreq, penaltyPresent, topP, topK, temp);
+      _controller.add(result);
+
+      if(isDone){
+        break;
+      }
+    }
   }
 
   /// Reset the state of the Llama instance

@@ -4241,6 +4241,7 @@ class llama_cpp {
   /// @param tokens The tokens pointer must be large enough to hold the resulting tokens.
   /// @return Returns the number of tokens on success, no more than n_tokens_max
   /// @return Returns a negative number on failure - the number of tokens that would have been returned
+  /// @param add_special Allow to add BOS and EOS tokens if model is configured to do so.
   /// @param parse_special Allow tokenizing special and/or control tokens which otherwise are not exposed and treated
   /// as plaintext. Does not insert a leading space.
   int llama_tokenize(
@@ -4282,6 +4283,7 @@ class llama_cpp {
     int token,
     ffi.Pointer<ffi.Char> buf,
     int length,
+    int lstrip,
     bool special,
   ) {
     return _llama_token_to_piece(
@@ -4289,6 +4291,7 @@ class llama_cpp {
       token,
       buf,
       length,
+      lstrip,
       special,
     );
   }
@@ -4300,10 +4303,51 @@ class llama_cpp {
               llama_token,
               ffi.Pointer<ffi.Char>,
               ffi.Int32,
+              ffi.Int32,
               ffi.Bool)>>('llama_token_to_piece');
   late final _llama_token_to_piece = _llama_token_to_piecePtr.asFunction<
-      int Function(
-          ffi.Pointer<llama_model>, int, ffi.Pointer<ffi.Char>, int, bool)>();
+      int Function(ffi.Pointer<llama_model>, int, ffi.Pointer<ffi.Char>, int,
+          int, bool)>();
+
+  /// @details Convert the provided tokens into text (inverse of llama_tokenize()).
+  /// @param text The char pointer must be large enough to hold the resulting text.
+  /// @return Returns the number of chars/bytes on success, no more than text_len_max.
+  /// @return Returns a negative number on failure - the number of chars/bytes that would have been returned.
+  /// @param remove_special Allow to remove BOS and EOS tokens if model is configured to do so.
+  /// @param unparse_special If true, special tokens are rendered in the output.
+  int llama_detokenize(
+    ffi.Pointer<llama_model> model,
+    ffi.Pointer<llama_token> tokens,
+    int n_tokens,
+    ffi.Pointer<ffi.Char> text,
+    int text_len_max,
+    bool remove_special,
+    bool unparse_special,
+  ) {
+    return _llama_detokenize(
+      model,
+      tokens,
+      n_tokens,
+      text,
+      text_len_max,
+      remove_special,
+      unparse_special,
+    );
+  }
+
+  late final _llama_detokenizePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<llama_model>,
+              ffi.Pointer<llama_token>,
+              ffi.Int32,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int32,
+              ffi.Bool,
+              ffi.Bool)>>('llama_detokenize');
+  late final _llama_detokenize = _llama_detokenizePtr.asFunction<
+      int Function(ffi.Pointer<llama_model>, ffi.Pointer<llama_token>, int,
+          ffi.Pointer<ffi.Char>, int, bool, bool)>();
 
   /// Apply chat template. Inspired by hf apply_chat_template() on python.
   /// Both "model" and "custom_template" are optional, but at least one is required. "custom_template" has higher precedence than "model"
@@ -5090,8 +5134,10 @@ abstract class llama_vocab_pre_type {
   static const int LLAMA_VOCAB_PRE_TYPE_DBRX = 13;
   static const int LLAMA_VOCAB_PRE_TYPE_SMAUG = 14;
   static const int LLAMA_VOCAB_PRE_TYPE_PORO = 15;
-  static const int LLAMA_VOCAB_PRE_TYPE_VIKING = 16;
-  static const int LLAMA_VOCAB_PRE_TYPE_JAIS = 17;
+  static const int LLAMA_VOCAB_PRE_TYPE_CHATGLM3 = 16;
+  static const int LLAMA_VOCAB_PRE_TYPE_CHATGLM4 = 17;
+  static const int LLAMA_VOCAB_PRE_TYPE_VIKING = 18;
+  static const int LLAMA_VOCAB_PRE_TYPE_JAIS = 19;
 }
 
 abstract class llama_rope_type {
@@ -5174,6 +5220,12 @@ abstract class llama_pooling_type {
   static const int LLAMA_POOLING_TYPE_MEAN = 1;
   static const int LLAMA_POOLING_TYPE_CLS = 2;
   static const int LLAMA_POOLING_TYPE_LAST = 3;
+}
+
+abstract class llama_attention_type {
+  static const int LLAMA_ATTENTION_TYPE_UNSPECIFIED = -1;
+  static const int LLAMA_ATTENTION_TYPE_CAUSAL = 0;
+  static const int LLAMA_ATTENTION_TYPE_NON_CAUSAL = 1;
 }
 
 abstract class llama_split_mode {
@@ -5335,6 +5387,9 @@ final class llama_context_params extends ffi.Struct {
 
   @ffi.Int32()
   external int pooling_type;
+
+  @ffi.Int32()
+  external int attention_type;
 
   @ffi.Float()
   external double rope_freq_base;

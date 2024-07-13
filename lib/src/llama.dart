@@ -1,7 +1,6 @@
 //import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:dart_llama_lib/bind/llama_cpp.dart';
@@ -330,7 +329,7 @@ class Llama{
     int bufferSize = 64;
     Pointer<Char> result = malloc.allocate<Char>(bufferSize);
     try{
-      int pieces = lib.llama_token_to_piece(model, token, result, bufferSize, false);
+      int pieces = lib.llama_token_to_piece(model, token, result, bufferSize, 0, false);
       pieces = min(pieces, bufferSize - 1);
 
       final buffer = result.cast<Uint8>().asTypedList(pieces);

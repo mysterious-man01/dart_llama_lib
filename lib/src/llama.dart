@@ -30,10 +30,16 @@ class Llama{
   int tokenPos = 0;
   List<int> lastTokens = [];
 
+  /// [EXPERIMENTAL]
+  /// -------------------------------------------------------------------------
   final StreamController<String> _controller = StreamController.broadcast();
 
   Stream<String> get stream => _controller.stream;
-  
+
+  ///--------------------------------------------------------------------------
+
+
+  /// Getter for the Llama library path.
   static String? libPath;
 
   /// Getter for the Llama library.
@@ -208,7 +214,10 @@ class Llama{
     return output.join('');
   }
 
-  Stream<void> prompt_async({
+
+  /// [EXPERIMENTAL]
+  /// -------------------------------------------------------------------------
+  Stream<void> promptAsync({
     required String text,
     bool penalizeNl = true,
     int nPrev = 64,
@@ -260,6 +269,8 @@ class Llama{
       }
     }
   }
+  /// -------------------------------------------------------------------------
+
 
   /// Reset the state of the Llama instance
   void clear(){

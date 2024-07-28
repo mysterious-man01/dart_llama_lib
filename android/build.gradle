@@ -1,5 +1,5 @@
 group 'com.example.dart_llama_lib'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 buildscript {
     ext.kotlin_version = '1.7.10'
@@ -30,6 +30,12 @@ android {
     }
 
     compileSdk 34
+
+    externalNativeBuild {
+        cmake {
+            path '../src/CMakeLists.txt'
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

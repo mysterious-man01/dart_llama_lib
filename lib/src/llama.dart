@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dart_llama_lib/bind/llama_cpp.dart';
@@ -45,8 +46,10 @@ class Llama{
   /// Getter for the Llama library.
   /// Loads the library based on the current platform
   llama_cpp get lib{
-    if(libPath != null){
-      //print('Pathlib: $libPath');
+    if(Platform.isAndroid){
+      _lib = llama_cpp(DynamicLibrary.open('libllama.so'));
+    }
+    else if(libPath != null && File(libPath!).existsSync()){
       _lib = llama_cpp(DynamicLibrary.open(libPath!));
     }
     else{

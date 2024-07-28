@@ -26,14 +26,11 @@ analyzer:
 # The following section is specific to Flutter packages.
 flutter:
   plugin:
+    mainClass: com.example.dart_llama_lib.dart_llama_class
     platforms:
       android:
         ffiPlugin: true
-        package: com.example.dart_llama_lib
-        pluginClass: DartLlamaLib
       linux:
         ffiPlugin: true
-        pluginClass: DartLlamaLib
       windows:
         ffiPlugin: true
-        pluginClass: DartLlamaLib

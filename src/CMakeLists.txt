@@ -20,4 +20,4 @@ endif()
 
 set(LLAMA_NATIVE OFF CACHE BOOL "llama: disable -march=native flag" FORCE)
 
-add_subdirectory(${LLAMA_DIR})
+add_subdirectory(${LLAMA_DIR} shared)

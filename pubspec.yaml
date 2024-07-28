@@ -1,7 +1,7 @@
 name: dart_llama_lib
 description: "Llama.cpp biding for Dart"
 version: 0.0.1
-homepage:
+homepage: https://github.com/mysterious-man01/dart_llama_lib.git
 
 environment:
   sdk: '>=3.3.0 <4.0.0'

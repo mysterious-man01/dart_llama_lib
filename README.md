@@ -1,4 +1,4 @@
-# Dart Llama Lib
+# Dart Llama Lib [**DEPRECATED**]
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
@@ -7,6 +7,7 @@ A library that pack [Llama.cpp](https://github.com/ggerganov/llama.cpp) to work 
 Run any .gguf model file on Linux, Windows and Android.
 
 > [IMPORTANT]
+- Use [llamacpp4dart](https://github.com/mysterious-man01/llamacpp4dart) instead
 - This project is on alfa preview and can have unespected bugs!
 - It is not fully implemented!
 
